@@ -1,0 +1,200 @@
+<!doctype html>
+  <html lang="ko">
+    <title>OpenCV 테스트</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <div class="row" style="padding:10px">
+        <div class="col">
+          <h1>OpenCV 테스트</h1>
+        </div>
+      </div> <!-- row -->
+      <div class="row">
+        <div class="col">
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a id="video-realtime-tab" class="nav-link active" aria-current="page" href="#" onclick="change_tab('video-realtime')">실시간</a>
+            </li>
+            <li class="nav-item">
+              <a id="video-file-tab" class="nav-link" href="#" onclick="change_tab('video-file')">저장 영상</a>
+            </li>
+          </ul>
+        </div>
+      </div> <!-- row -->
+      <div class="row" id="video-realtime" style="padding:10px">
+        <div class="col-3">
+          <div>Time: <span id="time">test</span></div>
+        </div> <!-- col -->
+        <div class="col-7">
+          <img id="video-feed" style="width:600px;height:300px;background-color:#eeeeee;" />
+        </div> <!-- col -->
+      </div> <!-- row -->
+      <div class="row" id="video-file" style="padding:10px;display:none">
+        <div class="col-3">
+          <div>Time: <span id="time2">test</span></div>
+          <div style="height:10px"></div>
+          <div id="file-list">
+            {% for x in file_list %}
+              <a href="#" onclick="load('{{ x }}')">{{ x }}</a><br />
+            {% endfor %}
+          </div>
+        </div> <!-- col -->
+        <div class="col-7">
+          <img id="video-feed2" style="width:600px;height:300px;background-color:#eeeeee;" />
+          <div style="padding-top:5px">
+            <input type="range" class="form-range" id="video-timebar" disabled min=0 max=0 style="width:600px" onclick="seek()">
+            <div id="time-info" style="text-align:right;width:600px">0:00:00</div>
+          </div>
+          <div style="padding-top:5px">
+            <!-- <button type="button" class="btn btn-success" onclick="load()"><i class="bi bi-folder"></i> Load</button> -->
+            <button type="button" id="play-btn" class="btn btn-primary disabled" onclick="play()"><i class="bi bi-play-fill"></i> Play</button>
+            <button type="button" id="pause-btn" class="btn btn-primary disabled" onclick="pause()"><i class="bi bi-pause-fill"></i> Pause</button>
+            <button type="button" id="ff-btn" class="btn btn-secondary disabled" onclick="rew()"><i class="bi bi-skip-backward-fill"></i></button>
+            <button type="button" id="rew-btn" class="btn btn-secondary disabled" onclick="ff()"><i class="bi bi-skip-forward-fill"></i></button>
+          </div>
+        </div> <!-- col -->
+      </div> <!-- row -->
+    </div> <!-- container -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script>
+      // block_update = 0
+
+      function load(file_name) {
+        $.post("/load/"+file_name, "", function(data) {
+          console.log('video loaded');
+          $("#play-btn").removeClass("disabled");
+        });
+      }
+
+      function play() {
+        $("#play-btn").addClass("disabled");
+        $("#pause-btn").addClass("disabled");
+        $("#ff-btn").addClass("disabled");
+        $("#rew-btn").addClass("disabled");
+        $("#video-timebar").attr("disabled", true);
+        $.post("/play", "", function(data) {
+          console.log('play');
+          $("#pause-btn").removeClass("disabled");
+          $("#ff-btn").removeClass("disabled");
+          $("#rew-btn").removeClass("disabled");
+          // $("#video-timebar").attr("disabled", false);
+        });
+      }
+
+      function pause() {
+        $("#play-btn").addClass("disabled");
+        $("#pause-btn").addClass("disabled");
+        $("#ff-btn").addClass("disabled");
+        $("#rew-btn").addClass("disabled");
+        $("#video-timebar").attr("disabled", true);
+        $.post("/pause", "", function(data) {
+          console.log('pause');
+          $("#play-btn").removeClass("disabled");
+          $("#ff-btn").removeClass("disabled");
+          $("#rew-btn").removeClass("disabled");
+          // $("#video-timebar").attr("disabled", false);
+        });        
+      }
+
+      function rew() {
+        $("#play-btn").addClass("disabled");
+        $("#pause-btn").addClass("disabled");
+        $("#ff-btn").addClass("disabled");
+        $("#rew-btn").addClass("disabled");
+        $("#video-timebar").attr("disabled", true);
+        $.post("/rew", "", function(data) {
+          console.log('rew');
+          $("#pause-btn").removeClass("disabled");
+          $("#ff-btn").removeClass("disabled");
+          $("#rew-btn").removeClass("disabled");
+          // $("#video-timebar").attr("disabled", false);
+        });
+      }
+
+      function ff() {
+        $("#play-btn").addClass("disabled");
+        $("#pause-btn").addClass("disabled");
+        $("#ff-btn").addClass("disabled");
+        $("#rew-btn").addClass("disabled");
+        $("#video-timebar").attr("disabled", true);
+        $.post("/ff", "", function(data) {
+          console.log('ff');
+          $("#pause-btn").removeClass("disabled");
+          $("#ff-btn").removeClass("disabled");
+          $("#rew-btn").removeClass("disabled");
+          // $("#video-timebar").attr("disabled", false);
+        });        
+      }
+
+      function seek() {
+        // if ($("#video-timebar").hasClass("disabled")) { return; }
+        $("#play-btn").addClass("disabled");
+        $("#pause-btn").addClass("disabled");
+        $("#ff-btn").addClass("disabled");
+        $("#rew-btn").addClass("disabled");
+        $("#video-timebar").attr("disabled", true);
+        sel_frame_pos = $("#video-timebar").val();
+        $.post("/seek/"+sel_frame_pos, "", function(data) {
+          $("#video-timebar").val(sel_frame_pos);
+          console.log('seek');
+          $("#pause-btn").removeClass("disabled");
+          $("#ff-btn").removeClass("disabled");
+          $("#rew-btn").removeClass("disabled");
+          // $("#video-timebar").attr("disabled", false);
+        });        
+      }
+
+      function file_list() {
+        $.post("/file/list", "", function(data) {
+          for (var x in data["data"]) {
+            value = $("#file-list").html();
+            $("#file-list").html(value + "<br>" + data["data"][x]);
+          }
+        });        
+      }
+
+      function change_tab(id) {
+        $("#video-realtime-tab").removeClass("active");
+        $("#video-file-tab").removeClass("active");
+        $("#"+id+"-tab").addClass("active");
+        $("#video-realtime").css("display", "none");
+        $("#video-file").css("display", "none");
+        $("#"+id).css("display", "");
+      }
+
+      function connect_server() {
+        var socket = io();
+        socket.on("feed_frame_realtime_test", function(data) {
+          $("#video-feed").attr("src", "data:image/jpeg;base64,"+data);
+        });
+        socket.on("feed_frame_info_realtime_test", function(data) {
+          console.log(data);
+          $("#time").html(data["time"]);
+        });
+        socket.on("feed_frame_file_test", function(data) {
+          $("#video-feed2").attr("src", "data:image/jpeg;base64,"+data);
+        });
+        socket.on("feed_frame_info_file_test", function(data) {
+          console.log(data);
+          $("#time2").html(data["time"]);
+          $("#video-timebar").val(data["curr_frame_pos"]);
+          $("#video-timebar").attr("max", data["total_frame_pos"]);
+          $("#time-info").html(data["curr_hhmmss"] + " / " + data["total_hhmmss"]);
+        });
+      }
+      connect_server();
+
+    </script>
+  </body>
+</html>
+
+
+
+
+
