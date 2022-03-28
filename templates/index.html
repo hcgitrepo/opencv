@@ -1,6 +1,6 @@
 <!doctype html>
   <html lang="ko">
-    <title>OpenCV 테스트</title>
+    <title>OpenCV Test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
@@ -9,17 +9,17 @@
     <div class="container">
       <div class="row" style="padding:10px">
         <div class="col">
-          <h1>OpenCV 테스트</h1>
+          <h1>OpenCV Test</h1>
         </div>
       </div> <!-- row -->
       <div class="row">
         <div class="col">
           <ul class="nav nav-tabs">
             <li class="nav-item">
-              <a id="video-realtime-tab" class="nav-link active" aria-current="page" href="#" onclick="change_tab('video-realtime')">실시간</a>
+              <a id="video-realtime-tab" class="nav-link active" aria-current="page" href="#" onclick="change_tab('video-realtime')">Realtime Video</a>
             </li>
             <li class="nav-item">
-              <a id="video-file-tab" class="nav-link" href="#" onclick="change_tab('video-file')">저장 영상</a>
+              <a id="video-file-tab" class="nav-link" href="#" onclick="change_tab('video-file')">Saved Videos</a>
             </li>
           </ul>
         </div>
@@ -29,7 +29,7 @@
           <div>Time: <span id="time">test</span></div>
         </div> <!-- col -->
         <div class="col-7">
-          <img id="video-feed" style="width:600px;height:300px;background-color:#eeeeee;" />
+          <img id="video-feed" style="width:600px;background-color:#eeeeee;" />
         </div> <!-- col -->
       </div> <!-- row -->
       <div class="row" id="video-file" style="padding:10px;display:none">
@@ -43,7 +43,7 @@
           </div>
         </div> <!-- col -->
         <div class="col-7">
-          <img id="video-feed2" style="width:600px;height:300px;background-color:#eeeeee;" />
+          <img id="video-feed2" style="width:600px;background-color:#eeeeee;" />
           <div style="padding-top:5px">
             <input type="range" class="form-range" id="video-timebar" disabled min=0 max=0 style="width:600px" onclick="seek()">
             <div id="time-info" style="text-align:right;width:600px">0:00:00</div>
